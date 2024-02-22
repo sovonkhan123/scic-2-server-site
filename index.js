@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middlewire
@@ -10,7 +10,7 @@ app.use(express.json());
 
 R9zmnuV1X65WJQWH
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+
 const uri = "mongodb+srv://task-user:R9zmnuV1X65WJQWH@cluster0.whzaso4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -24,6 +24,14 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+
+    const userCollection = client.db('task-user').collection('user');
+
+    app.post('/contest', async (req, res) => {
+        const item = req.body;
+        const result = await userCollection.insertOne(item);
+        res.send(result);
+      });
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
